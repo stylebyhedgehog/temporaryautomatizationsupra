@@ -1,10 +1,8 @@
 import os
-from typing import Any
 
 import requests
 import logging
 
-from dotenv import load_dotenv
 
 
 class AlfaApiFetcher:
@@ -43,7 +41,7 @@ class AlfaApiFetcher:
                 return None
 
     @staticmethod
-    def fetch_paginated_data(url: str, payload: dict = None, params: dict = None) -> list[Any] | None:
+    def fetch_paginated_data(url: str, payload: dict = None, params: dict = None):
         token = AlfaApiFetcher._authenticate()
         data_list = []
         current_count = 0
@@ -75,7 +73,7 @@ class AlfaApiFetcher:
             return None
 
     @staticmethod
-    def fetch_paginated_data_with_max_pages_constraints(url: str, max_pages, payload: dict = None, params: dict = None) -> list[Any] | None:
+    def fetch_paginated_data_with_max_pages_constraints(url: str, max_pages, payload: dict = None, params: dict = None):
         token = AlfaApiFetcher._authenticate()
         data_list = []
         current_count = 0
@@ -105,7 +103,3 @@ class AlfaApiFetcher:
             return data_list
         else:
             return None
-# from dotenv import load_dotenv
-# load_dotenv()
-# d = AlfaApiFetcher.fetch_paginated_data(url="https://supra.s20.online/v2api/customer/index",payload={"id": 2324})
-# print(d)
