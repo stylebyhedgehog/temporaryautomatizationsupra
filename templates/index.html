@@ -13,10 +13,11 @@
         <a href="{{ url_for('view_balance') }}">Баланс</a>
         <a href="{{ url_for('view_recordings') }}">Записи</a>
     </h1>
-
-    <h1>Список групп</h1>
-    {% for group in data %}
-    <p>{{group['name']}} - {{group['id']}}  </p>
-    {% endfor %}
+    {% if data %}
+        <h1>Список групп</h1>
+        {% for group in data %}
+        <p>{{group['name']}} - {{group['id']}}  </p>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>

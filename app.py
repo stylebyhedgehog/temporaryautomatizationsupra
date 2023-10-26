@@ -37,8 +37,11 @@ def view_recordings():
 
 @app.route('/', methods=['GET'])
 def main():
-    groups = FetchGroup.all()
-    return render_template('index.html', data = groups)
+    if os.getenv("DEV_MODE") == "1":
+        groups = FetchGroup.all()
+        return render_template('index.html', data = groups)
+    else:
+        return render_template('index.html', data=None)
 
 if os.getenv("DEV_MODE") == "1":
     if __name__ == '__main__':
