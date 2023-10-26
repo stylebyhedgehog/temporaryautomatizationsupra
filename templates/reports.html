@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчеты</title>
+</head>
+<body>
+    <h1>
+        <a href="{{ url_for('view_balance') }}">Баланс</a>
+        <a href="{{ url_for('view_recordings') }}">Записи</a>
+    </h1>
+    {% for item in data %}
+        <h2>{{ item['group_name'] }}</h2>
+        <p><strong>Ребенок:</strong> {{ item['child_name'] }}</p>
+        <p><strong>Родитель:</strong> {{ item['parent_name'] }}</p>
+        <p><strong>Дата:</strong> {{ item['date'] }}</p>
+
+        <p><strong>Полный текст:</strong>
+            <span id="reportText{{ loop.index }}" data-text="{{ item['full_text'] }}">
+                {% for line in item['full_text'].split('\n') %}
+                    {{ line }}<br>
+                {% endfor %}
+            </span>
+            <button onclick="copyToClipboard('reportText{{ loop.index }}')">Скопировать отчет</button>
+        </p>
+        <hr>
+    {% endfor %}
+
+    <script>
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).getAttribute('data-text');
+            navigator.clipboard.writeText(textToCopy);
+        }
+    </script>
+</body>
+</html>

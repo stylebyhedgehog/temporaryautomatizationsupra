@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записи</title>
+</head>
+<body>
+
+    <h1>
+        <a href="{{ url_for('view_reports') }}">Отчеты</a>
+        <a href="{{ url_for('view_balance') }}">Баланс</a>
+    </h1>
+    {% for item in data %}
+        <h2>{{ item['group_name'] }}</h2>
+        <p><strong>Дата занятия:</strong> {{ item['lesson_date'] }}</p>
+        <p><strong>Тема занятия:</strong> {{ item['lesson_topic'] }}</p>
+        <p>
+            <strong>Дети, пропустившие занятие:</strong>
+            {% for child_name in item['children_names'] %}
+                <p>{{child_name}}</p>
+            {% endfor %}
+        </p>
+        <p>
+            <strong>Ссылки на записи:</strong>
+            {% for recording_url in item['recordings_url_list'] %}
+                <p>{{recording_url}}</p>
+            {% endfor %}
+        </p>
+        <hr>
+    {% endfor %}
+</body>
+</html>
