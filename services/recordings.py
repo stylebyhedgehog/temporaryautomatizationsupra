@@ -1,4 +1,4 @@
-from external_apis.alfa_requests.fetchers import FetchLesson, FetchCustomer, FetchGroup
+from external_apis.alfa_requests.fetchers import FetchLesson, FetchCustomer, FetchGroup, FetchRoom
 from external_apis.zoom.fetchers import FetchRecordings
 from utils.date_utils import curr_date, date_seven_days_ago, moscow_to_utc
 from utils.string_utils import extract_value_in_brackets
@@ -24,7 +24,11 @@ def get_recordings_for_last_week():
                 lesson_room_id = lesson.get("room_id")
                 time_from = lesson.get('time_from')
                 lesson_date = moscow_to_utc(time_from)
-                meetings = FetchRecordings.by_room_id_from_to(lesson_room_id, lesson_date, lesson_date)
+                room_num = FetchRoom.get_room_num_by_id(lesson_room_id)
+                meetings = FetchRecordings.by_room_num_from_to(room_num, lesson_date, lesson_date)
+                # print(lesson.get("id"), lesson_room_id, lesson_date, lesson_date, absent_children_names)
+                # print(meetings)
+                # print("-"*20)
                 if meetings:
                     recordings= meetings.get("meetings")
                 else:
@@ -33,6 +37,8 @@ def get_recordings_for_last_week():
                 recordings_url_list = []
                 for recording in recordings:
                     recording_topic = recording.get('topic')
+                    if "[" not in recording_topic:
+                        continue
                     try:
                         recording_group_id = int(extract_value_in_brackets(recording_topic))
                         if recording_group_id == group_id:

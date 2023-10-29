@@ -16,7 +16,7 @@
     {% if data %}
         <h1>Список групп</h1>
         {% for group in data %}
-        <p>{{group['name']}} - {{group['id']}}  </p>
+        <div>{{group['name']}} - {{group['id']}}  </div>
         {% endfor %}
     {% endif %}
 </body>

@@ -12,15 +12,17 @@ def get_reports_for_last_week():
             children_list = lesson.get("details")
             if is_children_contains_feedback(children_list):
                 group_id = lesson.get("group_ids")[0]
+
                 groups = FetchGroup.by_group_id(group_id)
+
                 if groups is None:
-                    return
+                    continue
                 group_name = groups[0].get("name")
 
                 subject_id = lesson.get("subject_id")
                 subjects = FetchSubject.by_subject_id(subject_id)
                 if subjects is None:
-                    return
+                    continue
                 subject_name = ""
                 for subject in subjects:
                     if subject.get("id") == subject_id:
@@ -31,7 +33,7 @@ def get_reports_for_last_week():
 
                 for child_info in children_list:
                     note = child_info.get("note")
-                    if "отчет" in note.lower() or "отчёт" in note.lower():
+                    if len(note)>1 and note.lower().startswith("ос") :
                         child_id = child_info.get("customer_id")
                         customers = FetchCustomer.by_customer_id(child_id)
                         if customers is None:
@@ -47,17 +49,18 @@ def get_reports_for_last_week():
                         full_text = form_full_report_text(parent_name, child_name, month_name, lessons_amount,
                                                           subject_name,
                                                           average_attendance,
-                                                          attd_lessons_amount, topic_perf_list, note[6:])
+                                                          attd_lessons_amount, topic_perf_list, note[3:])
                         result = {"group_name": group_name, "child_name": child_name, "parent_name": parent_name,
                                   "date": date,
                                   "full_text": full_text}
                         reports.append(result)
-            return reports
+        return reports
 
 
 def is_children_contains_feedback(details):
     for detail in details:
-        if "отчет" in detail["note"].lower() or "отчёт" in detail["note"].lower():
+        note = detail.get("note")
+        if len(note)>1 and note.lower().startswith("ос"):
             return True
     return False
 
@@ -110,6 +113,7 @@ def form_full_report_text(parent_name, child_name, month_name, lessons_amount, s
         else:
             result += f"\n{topic_performance_rate.get('topic')} - Пропущено"
     result += f"""
+    
 Преподаватель отмечает, что {teacher_feedback} 
 
 🏆 Будем благодарны за оценку нашей образовательной услуги в прошлом месяце: от 0 до 10 (где 0 - совсем не понравилось, 10 - все отлично, пожеланий нет).
