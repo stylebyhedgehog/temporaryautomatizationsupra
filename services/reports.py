@@ -101,23 +101,30 @@ def form_body(child_alfa_id, child_group_alfa_id, date_from):
 def form_full_report_text(parent_name, child_name, month_name, lessons_amount, subject_name, attendance_rate,
                           attendance_amount, topic_performance_rate_list, teacher_feedback):
     result = f"""
-Добрый день, {parent_name}! Будем рады поделиться промежуточными результатами обучения {child_name} за {month_name}.
-📝 У нас прошло {lessons_amount} занятий в рамках курса {subject_name}.
-📊 Посещаемость - {attendance_rate}% ({attendance_amount}/{lessons_amount})
-
-📖 В рамках блока занятий освоены следующие темы:
+Добрый день! Будем рады поделиться промежуточными результатами обучения за {month_name.lower()}.
 """
-    for topic_performance_rate in topic_performance_rate_list:
-        if topic_performance_rate.get('grade'):
-            result += f"\n{topic_performance_rate.get('topic')} - {topic_performance_rate.get('grade')}%"
-        else:
-            result += f"\n{topic_performance_rate.get('topic')} - Пропущено"
+    if "АЯ" not in subject_name:
+        result+= f"\n📝 У нас прошло {lessons_amount} занятий в рамках курса {subject_name[3:]}."
+    else:
+        result += f"\n📝 У нас прошло {lessons_amount} занятий."
+
+
+    result+=f"\n📊 Посещаемость - {attendance_rate}% ({attendance_amount}/{lessons_amount})"
+
+
+    if "АЯ" not in subject_name:
+        result+= "\n\n📖 В рамках блока занятий освоены следующие темы:\n"
+        for topic_performance_rate in topic_performance_rate_list:
+            if topic_performance_rate.get('grade'):
+                result += f"\n▪️{topic_performance_rate.get('topic')} - {topic_performance_rate.get('grade')}%"
+            else:
+                result += f"\n▪️{topic_performance_rate.get('topic')} - Пропущено"
     result += f"""
     
 Преподаватель отмечает, что {teacher_feedback} 
 
 🏆 Будем благодарны за оценку нашей образовательной услуги в прошлом месяце: от 0 до 10 (где 0 - совсем не понравилось, 10 - все отлично, пожеланий нет).
-Спасибо Вам и {child_name} за занятия! Мы всегда открыты к вашим вопросам и пожеланиям по процессу обучения! 
+Мы всегда открыты к вашим вопросам и пожеланиям по процессу обучения! 
 
 С уважением, команда онлайн-академии Supra
          """
