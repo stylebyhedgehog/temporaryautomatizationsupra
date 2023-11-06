@@ -1,11 +1,11 @@
 from external_apis.alfa_requests.fetchers import FetchLesson, FetchGroup, FetchCustomer, FetchSubject
-from utils.date_utils import get_month_name, remove_day, next_month, curr_date, date_seven_days_ago
+from utils.date_utils import get_month_name, remove_day, next_month, curr_date, date_15_days_ago
 
 
 def get_reports_for_last_week():
     current_date = curr_date()
     reports = []
-    week_ago_date = date_seven_days_ago()
+    week_ago_date = date_15_days_ago()
     lessons = FetchLesson.by_dates(week_ago_date, current_date)
     if lessons:
         for lesson in lessons:

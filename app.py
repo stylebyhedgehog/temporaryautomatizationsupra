@@ -22,7 +22,20 @@ app = Flask(__name__)
 @app.route('/get_reports', methods=['GET'])
 def view_reports():
     data = get_reports_for_last_week()
-    return render_template('reports.html', data=data)
+    unique_list = unique(data)
+    return render_template('reports.html', data=data, unique_list=unique_list)
+
+def unique(input_list):
+    unique_groups = set()
+    result_list = []
+    for item in input_list:
+        # Проверяем, был ли уже добавлен "group_name" в множество
+        if item["group_name"] not in unique_groups:
+            # Добавляем "group_name" в множество
+            unique_groups.add(item["group_name"])
+            # Добавляем соответствующий элемент в результирующий список
+            result_list.append({"group_name": item["group_name"], "date": item["date"]})
+    return result_list
 
 @app.route('/get_balance', methods=['GET'])
 def view_balance():

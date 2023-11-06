@@ -1,11 +1,11 @@
 from external_apis.alfa_requests.fetchers import FetchGroup, FetchCustomer, FetchLesson
-from utils.date_utils import curr_date, date_seven_days_ago
+from utils.date_utils import curr_date, date_15_days_ago
 
 
 def get_balance_info_for_last_week():
     current_date = curr_date()
     balance_info = []
-    week_ago_date = date_seven_days_ago()
+    week_ago_date = date_15_days_ago()
     lessons = FetchLesson.by_dates(week_ago_date, current_date)
     unique_child_ids = set()
     if lessons:

@@ -47,9 +47,9 @@ def curr_date():
     return formatted_date
 
 
-def date_seven_days_ago():
+def date_15_days_ago():
     current_date = datetime.now()
-    seven_days_ago = current_date - timedelta(days=7)
+    seven_days_ago = current_date - timedelta(days=15)
     formatted_date = seven_days_ago.strftime('%Y-%m-%d')
     return formatted_date
 

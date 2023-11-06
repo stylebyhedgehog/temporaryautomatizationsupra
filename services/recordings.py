@@ -1,13 +1,13 @@
 from external_apis.alfa_requests.fetchers import FetchLesson, FetchCustomer, FetchGroup, FetchRoom
 from external_apis.zoom.fetchers import FetchRecordings
-from utils.date_utils import curr_date, date_seven_days_ago, moscow_to_utc
+from utils.date_utils import curr_date, date_15_days_ago, moscow_to_utc
 from utils.string_utils import extract_value_in_brackets
 
 
 def get_recordings_for_last_week():
     result = []
     current_date = curr_date()
-    week_ago_date = date_seven_days_ago()
+    week_ago_date = date_15_days_ago()
     lessons = FetchLesson.by_dates(week_ago_date, current_date)
     if lessons:
         for lesson in lessons:

@@ -11,6 +11,12 @@
         <a href="{{ url_for('view_balance') }}">Баланс</a>
         <a href="{{ url_for('view_recordings') }}">Записи</a>
     </h1>
+    <h4>Перечень групп, для которых отображаются отчеты</h4>
+    {% for un in unique_list %}
+        <div>
+            <b>{{un['group_name']}}</b> <i>Дата занятия, в котором указана ОС от преподавателя: {{un['date']}}</i>
+        </div>
+    {% endfor %}
     {% for item in data %}
         <h2>{{ item['group_name'] }}</h2>
         <p><strong>Ребенок:</strong> {{ item['child_name'] }}</p>
