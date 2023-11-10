@@ -44,12 +44,12 @@ def get_reports_for_last_week():
                         body = form_body(child_id, group_id, date_from)
                         if body is None:
                             continue
-                        topic_perf_list, lessons_amount, attd_lessons_amount, average_attendance, average_grade = body
+                        topic_perf, lessons_amount, attd_lessons_amount, average_attendance, average_grade = body
 
                         full_text = form_full_report_text(parent_name, child_name, month_name, lessons_amount,
                                                           subject_name,
                                                           average_attendance,
-                                                          attd_lessons_amount, topic_perf_list, note[3:])
+                                                          attd_lessons_amount, topic_perf, note[3:])
                         result = {"group_name": group_name, "child_name": child_name, "parent_name": parent_name,
                                   "date": date,
                                   "full_text": full_text}
@@ -69,7 +69,7 @@ def form_body(child_alfa_id, child_group_alfa_id, date_from):
     data = FetchLesson.by_child_id_group_id_period(child_alfa_id, child_group_alfa_id, date_from,
                                                    next_month(date_from))
     if data:
-        topic_perf_list = []
+        topic_perf = ""
         lessons_amount = 0
         attd_lessons_amount = 0
         summary_grade = 0
@@ -86,20 +86,20 @@ def form_body(child_alfa_id, child_group_alfa_id, date_from):
                         grade = child_info.get("grade")
                         if grade is not None:
                             grade = float(grade.replace(",", "."))
-                            topic_perf_list.append({"topic": topic, "grade": grade})
+                            topic_perf += f"\n▪️{topic} - {grade}%"
                             summary_grade += grade
                     else:
-                        topic_perf_list.append({"topic": topic, "grade": None})
+                        topic_perf += f"\n▪️{topic} - Пропущено"
         if lessons_amount > 0:
             average_attendance = int((attd_lessons_amount / lessons_amount) * 100)
         if attd_lessons_amount > 0:
             average_grade = int(summary_grade / attd_lessons_amount)
-        return topic_perf_list, lessons_amount, attd_lessons_amount, average_attendance, average_grade
+        return topic_perf, lessons_amount, attd_lessons_amount, average_attendance, average_grade
     return None
 
 
 def form_full_report_text(parent_name, child_name, month_name, lessons_amount, subject_name, attendance_rate,
-                          attendance_amount, topic_performance_rate_list, teacher_feedback):
+                          attendance_amount, topic_perf, teacher_feedback):
     result = f"""
 Добрый день! Будем рады поделиться промежуточными результатами обучения за {month_name.lower()}.
 """
@@ -114,11 +114,7 @@ def form_full_report_text(parent_name, child_name, month_name, lessons_amount, s
 
     if "АЯ" not in subject_name:
         result+= "\n\n📖 В рамках блока занятий освоены следующие темы:\n"
-        for topic_performance_rate in topic_performance_rate_list:
-            if topic_performance_rate.get('grade'):
-                result += f"\n▪️{topic_performance_rate.get('topic')} - {topic_performance_rate.get('grade')}%"
-            else:
-                result += f"\n▪️{topic_performance_rate.get('topic')} - Пропущено"
+        result += topic_perf
     result += f"""
     
 Преподаватель отмечает, что {teacher_feedback} 
